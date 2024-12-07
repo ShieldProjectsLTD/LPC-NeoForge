@@ -5,9 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public final class ChatUtils {
     public static MutableComponent applyColorToLiteral(String text, String colorCode) {
         MutableComponent component = ChatUtils.parseFormattedText(text);
@@ -37,7 +34,7 @@ public final class ChatUtils {
 
             if (c == '&' && i + 1 < text.length()) {
                 // Применяем новый формат
-                if (buffer.length() > 0) {
+                if (!buffer.isEmpty()) {
                     component.append(Component.literal(buffer.toString()).withStyle(currentFormat));
                     buffer.setLength(0); // Очистка буфера
                 }
@@ -50,7 +47,7 @@ public final class ChatUtils {
         }
 
         // Добавляем оставшийся текст
-        if (buffer.length() > 0) {
+        if (!buffer.isEmpty()) {
             component.append(Component.literal(buffer.toString()).withStyle(currentFormat));
         }
 
