@@ -7,13 +7,13 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 @EventBusSubscriber(modid = LPCNeoForge.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class Config {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-    public static final ModConfigSpec SPEC;
+  private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+  public static final ModConfigSpec SPEC;
 
-    public static final ModConfigSpec.ConfigValue<String> CHAT_FORMAT;
+  public static final ModConfigSpec.ConfigValue<String> CHAT_FORMAT;
 
-    static {
-        BUILDER.comment("""
+  static {
+    BUILDER.comment("""
                 -----------------------------------
                 - Placeholders:
                  %prefix%
@@ -28,7 +28,7 @@ public class Config {
                  %chatmessage%
                 -----------------------------------
                 """);
-        BUILDER.comment("""
+    BUILDER.comment("""
                 - Color Codes:
                  &0 - Black      | &1 - Dark Blue
                  &2 - Dark Green | &3 - Dark Aqua
@@ -45,12 +45,12 @@ public class Config {
                 -----------------------------------
                 
                 """);
-        CHAT_FORMAT = BUILDER.comment("Chat format string with placeholders.")
-                .define("chatFormat", "%prefix%%username%%suffix%: %chatmessage%");
+    CHAT_FORMAT = BUILDER.comment("Chat format string with placeholders.")
+            .define("chatFormat", "%prefix%%username%%suffix%: %chatmessage%");
 
-        SPEC = BUILDER.build();
-    }
+    SPEC = BUILDER.build();
+  }
 
-    @SubscribeEvent
-    public static void onLoad(final ModConfigEvent event) {}
+  @SubscribeEvent
+  public static void onLoad(final ModConfigEvent event) {}
 }
