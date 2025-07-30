@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 public final class ChatUtils {
 
@@ -18,6 +19,15 @@ public final class ChatUtils {
         // Применяем цвет только к literal
         return Component.literal(text).withStyle(Style.EMPTY.withColor(chatFormatting.getColor()));
       }
+    } else if (colorCode.startsWith("#") && colorCode.length() == 7) {
+      try {
+        int rgb = Integer.parseInt(colorCode.substring(1), 16);
+        TextColor color = TextColor.fromRgb(rgb);
+
+        return Component.literal(text).withStyle(Style.EMPTY.withColor(color));
+      } catch (NumberFormatException e) {
+        return component;
+      }
     }
 
     return component; // Если цвет не определен, возвращаем оригинальный компонент
@@ -25,33 +35,65 @@ public final class ChatUtils {
 
   public static MutableComponent parseFormattedText(String text) {
     MutableComponent component = Component.literal(""); // Корневой компонент
-    StringBuilder buffer = new StringBuilder(); // Временный буфер для текста
-    ChatFormatting currentFormat = ChatFormatting.WHITE; // Начальный цвет
+    StringBuilder buffer = new StringBuilder(); // Текущий текст
+    Style currentStyle = Style.EMPTY.withColor(ChatFormatting.WHITE); // Начальный стиль
 
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
 
-      if (c == '&' && i + 1 < text.length()) {
-        // Применяем новый формат
-        if (!buffer.isEmpty()) {
-          component.append(Component.literal(buffer.toString()).withStyle(currentFormat));
-          buffer.setLength(0); // Очистка буфера
+      // HEX-цвет (должен начинаться с # и иметь длину 7 символов)
+      if (c == '#' && i + 6 < text.length()) {
+        String hexCode = text.substring(i, i + 7);
+        try {
+          int rgb = Integer.parseInt(hexCode.substring(1), 16);
+          // Добавляем накопленный буфер со старым стилем
+          if (!buffer.isEmpty()) {
+            component.append(Component.literal(buffer.toString()).withStyle(currentStyle));
+            buffer.setLength(0);
+          }
+          currentStyle = currentStyle.withColor(TextColor.fromRgb(rgb));
+          i += 6; // Пропускаем весь hex-код
+          continue;
+        } catch (NumberFormatException ignored) {
+          // Невалидный hex — просто продолжаем как обычный текст
         }
-
-        char formatCode = text.charAt(++i);
-        currentFormat = getChatFormattingByCode(formatCode);
-      } else {
-        buffer.append(c);
       }
+
+      // § или & форматирование
+      if ((c == '&' || c == '§') && i + 1 < text.length()) {
+        char formatCode = text.charAt(i + 1);
+        ChatFormatting formatting = getChatFormattingByCode(formatCode);
+        if (formatting != null) {
+          // Добавляем накопленный буфер
+          if (!buffer.isEmpty()) {
+            component.append(Component.literal(buffer.toString()).withStyle(currentStyle));
+            buffer.setLength(0);
+          }
+
+          if (formatting == ChatFormatting.RESET) {
+            currentStyle = Style.EMPTY;
+          } else if (formatting.isColor()) {
+            currentStyle = currentStyle.withColor(formatting.getColor());
+          } else {
+            currentStyle = currentStyle.applyFormat(formatting);
+          }
+
+          i++; // Пропускаем код форматирования
+          continue;
+        }
+      }
+
+      buffer.append(c);
     }
 
     // Добавляем оставшийся текст
     if (!buffer.isEmpty()) {
-      component.append(Component.literal(buffer.toString()).withStyle(currentFormat));
+      component.append(Component.literal(buffer.toString()).withStyle(currentStyle));
     }
 
     return component;
   }
+
 
   public static ChatFormatting getChatFormattingByCode(char code) {
     return switch (code) {
