@@ -1,11 +1,13 @@
 package com.lpcneoforge.lpcmod;
 
+
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-@EventBusSubscriber(modid = LPCNeoForge.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.DEDICATED_SERVER, modid = LPCNeoForge.MOD_ID)
 public class Config {
   private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
   public static final ModConfigSpec SPEC;
@@ -43,7 +45,7 @@ public class Config {
                  &m - Strikethrough  | &n - Underline
                  &o - Italic         | &r - Reset
                 -----------------------------------
-                
+
                 """);
     CHAT_FORMAT = BUILDER.comment("Chat format string with placeholders.")
             .define("chatFormat", "%prefix%%username%%suffix%: %chatmessage%");

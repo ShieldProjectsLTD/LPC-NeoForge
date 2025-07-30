@@ -27,7 +27,7 @@ public final class LPCNeoForge {
   private static LuckPerms luckPerms;
   private static ModContainer modContainer;
 
-  private LPCNeoForge(ModContainer container, IEventBus modEventBus) {
+  public LPCNeoForge(ModContainer container, IEventBus modEventBus) {
     modContainer = container;
 
     if (FMLEnvironment.dist.isClient()) {

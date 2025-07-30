@@ -34,7 +34,7 @@ public class LPCEvents {
         if (fullMessage != newMessage) {
           event.setCanceled(true);
 
-          serverPlayer.server.execute(() -> {
+          serverPlayer.getServer().execute(() -> {
             LPCNeoForge.LOGGER.info(newMessage.getString());
             broadcastMessage(serverPlayer.level(), newMessage);
           });

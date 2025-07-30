@@ -1,9 +1,7 @@
-modLoader="javafml"
-loaderVersion="${loader_version_range}"
 license="${mod_license}"
 
 [[mods]]
-    modId="lpcmod"
+    modId="${mod_id}"
     version="${mod_version}"
     displayName="${mod_name}"
     authors="${mod_authors}"
@@ -11,14 +9,14 @@ license="${mod_license}"
     ordering="BEFORE"
     side="SERVER"
 
-[[dependencies.lpcmod]]
+[[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"
-    versionRange="${neo_version_range}"
+    versionRange="[${neo_version},)"
     ordering="NONE"
     side="SERVER"
 
-[[dependencies.lpcmod]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     type="required"
     versionRange="${minecraft_version_range}"
@@ -26,8 +24,8 @@ license="${mod_license}"
     side="SERVER"
 
 [[dependencies.lpcmod]]
-modId="luckperms"
-type="required"
-versionRange="[5.4.146,)"
-ordering="BEFORE"
-side="SERVER"
+    modId="luckperms"
+    type="required"
+    versionRange="[5.5.9,)"
+    ordering="BEFORE"
+    side="SERVER"
