@@ -43,7 +43,8 @@ public class Config {
                  &m - Strikethrough  | &n - Underline
                  &o - Italic         | &r - Reset
                 -----------------------------------
-                
+                 #RRGGBB - Hex Color Codes (e.g. #ff00ff)
+                -----------------------------------
                 """);
     CHAT_FORMAT = BUILDER.comment("Chat format string with placeholders.")
             .define("chatFormat", "%prefix%%username%%suffix%: %chatmessage%");
